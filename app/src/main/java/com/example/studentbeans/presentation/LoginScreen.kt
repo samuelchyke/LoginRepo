@@ -40,7 +40,7 @@ fun LoginScreen(
                 .padding(15.dp))
             TextField(
                 value = emailText,
-                placeholder = { Text("Email")},
+                placeholder = { Text("Email") },
                 onValueChange = { onEmailChanged(it) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -49,7 +49,7 @@ fun LoginScreen(
                 .padding(10.dp))
             TextField(
                 value = passwordText,
-                placeholder = { Text("Password")},
+                placeholder = { Text("Password") },
                 onValueChange = { onPasswordChanged(it) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()

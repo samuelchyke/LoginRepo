@@ -22,7 +22,10 @@ fun Navigation(mainViewModel: MainViewModel) {
         }
 
         composable(route = Screen.MainScreen.route) {
-            MainScreen(mainViewModel, navController)
+            MainScreen(
+                mainViewModel,
+                navController
+            )
         }
     }
 }
