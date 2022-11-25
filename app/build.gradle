@@ -119,11 +119,7 @@ dependencies {
 
     //Image Loading
     def landscape_version = "2.0.0"
-    implementation "com.github.skydoves:landscapist-glide:$landscape_version"
     implementation "com.github.skydoves:landscapist-coil:$landscape_version"
-    implementation "com.github.skydoves:landscapist-placeholder:$landscape_version"
-
-    kapt 'com.github.bumptech.glide:compiler:4.13.0'
 
     // Testing
     testImplementation 'org.mockito:mockito-core:3.10.0'
