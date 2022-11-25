@@ -7,10 +7,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.studentbeans.presentation.Navigation
 import com.example.studentbeans.ui.theme.StudentBeansTheme
 import com.example.studentbeans.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,23 +27,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    mainViewModel
-                    Greeting("Android")
+                    Navigation(mainViewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    StudentBeansTheme {
-        Greeting("Android")
     }
 }
