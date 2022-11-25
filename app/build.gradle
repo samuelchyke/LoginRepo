@@ -59,6 +59,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.1'
+    implementation 'androidx.test.ext:junit-ktx:1.1.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -118,6 +119,7 @@ dependencies {
 
     //Image Loading
     def landscape_version = "2.0.0"
+    implementation "com.github.skydoves:landscapist-glide:$landscape_version"
     implementation "com.github.skydoves:landscapist-coil:$landscape_version"
     implementation "com.github.skydoves:landscapist-placeholder:$landscape_version"
 

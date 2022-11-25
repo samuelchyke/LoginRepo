@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.studentbeans.ui.theme.StudentBeansTheme
 import com.example.studentbeans.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    val mainViewModel : MainViewModel by viewModels()
+    private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
