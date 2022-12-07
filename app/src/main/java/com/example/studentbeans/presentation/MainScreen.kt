@@ -7,21 +7,21 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.studentbeans.presentation.composables.AppBar
-import com.example.studentbeans.presentation.composables.PhotoList
+import com.example.studentbeans.model.PhotoItem
+import com.example.studentbeans.presentation.mainscreen.AppBar
+import com.example.studentbeans.presentation.mainscreen.PhotoList
 import com.example.studentbeans.util.Screen
-import com.example.studentbeans.viewmodel.MainViewModel
 
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel,
-    navController: NavController
+    navController: NavController,
+    photos : List<PhotoItem>
 ) {
     Scaffold(
         topBar = {
-            AppBar {
-                navController.navigate(Screen.LoginScreen.route)
-            }
+            AppBar (
+                navBack = { navController.navigate(Screen.LoginScreen.route) }
+            )
         }
     ) {
         Box(
@@ -30,8 +30,13 @@ fun MainScreen(
                 .padding(it)
         ) {
             PhotoList(
-                photos = mainViewModel.photos.value
+                photos = photos
             )
         }
     }
 }
+
+
+
+
+

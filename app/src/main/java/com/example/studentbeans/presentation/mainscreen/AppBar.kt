@@ -1,4 +1,4 @@
-package com.example.studentbeans.presentation.composables
+package com.example.studentbeans.presentation.mainscreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,11 +14,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AppBar(
-    navBack :() -> Unit,
-    ) {
+    navBack: () -> Unit,
+) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colors.primary,
         elevation = 8.dp,
     ) {
@@ -27,14 +26,14 @@ fun AppBar(
         ) {
             TopAppBar(
                 title = {
-                        Row(
-                            modifier = Modifier.padding(start = 90.dp),
-                        ) {
-                            Text(text = "Photos") }
-
+                    Row(
+                        modifier = Modifier.padding(start = 90.dp),
+                    ) {
+                        Text(text = "Photos")
+                    }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {navBack()}) {
+                    IconButton(onClick = { navBack() }) {
                         Icon(Icons.Default.ArrowBack, "")
                     }
                 },

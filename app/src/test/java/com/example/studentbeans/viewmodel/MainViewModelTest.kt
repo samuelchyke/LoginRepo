@@ -1,7 +1,10 @@
 package com.example.studentbeans.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.studentbeans.MainCoroutineRule
 import com.example.studentbeans.domain.MainViewModel
+import com.example.studentbeans.domain.mainscreen.GetPhotosUseCase
 import com.example.studentbeans.domain.mainscreen.MainScreenEvent.*
 import com.example.studentbeans.model.PhotoItem
 import com.example.studentbeans.repository.NetworkRepository
@@ -13,6 +16,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -22,11 +26,20 @@ class MainViewModelTest {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var fakeNetworkRepo: NetworkRepository
+    private lateinit var savedStateHandle: SavedStateHandle
+    private lateinit var getPhotosUseCase: GetPhotosUseCase
+
+    // Set the main coroutines dispatcher for unit testing.
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
         fakeNetworkRepo = FakeNetworkRepoImpl()
-        mainViewModel = MainViewModel(fakeNetworkRepo)
+        getPhotosUseCase = GetPhotosUseCase(fakeNetworkRepo)
+        savedStateHandle = SavedStateHandle()
+        mainViewModel = MainViewModel(getPhotosUseCase, savedStateHandle)
     }
 
     @After
@@ -37,7 +50,7 @@ class MainViewModelTest {
     @Test
     fun `get photos from network`() = runBlocking {
 
-        //Given
+        //Given an initialized MainViewModel
         val photos = mainViewModel.photos
 
         //When
