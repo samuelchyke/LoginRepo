@@ -24,15 +24,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Saved instance state keys.
+ */
 private const val KEY_EMAIL = "email"
 private const val KEY_PASSWORD = "password"
 
+/**
+ * UiState for the main screen.
+ */
 data class MainScreenUIState(
     val photos : List<PhotoItem> = listOf(),
     val email: String = "",
     val password: String = ""
 )
 
+/**
+ * ViewModel for the main screen.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getPhotosUseCase: GetPhotosUseCase,
@@ -50,13 +59,14 @@ class MainViewModel @Inject constructor(
 //    val password = savedStateHandle.getStateFlow(KEY_PASSWORD, "")
 
     init {
+        onTriggerEvent(GetPhotosEvent)
+
         _uiState.update {
             it.copy(
-                email = savedStateHandle[KEY_EMAIL]!!,
-                password = savedStateHandle[KEY_PASSWORD]!!
+                email = savedStateHandle.getStateFlow(KEY_EMAIL,"").value,
+                password = savedStateHandle.getStateFlow(KEY_PASSWORD,"").value
             )
         }
-        onTriggerEvent(GetPhotosEvent)
     }
 
     fun onTriggerEvent(event: MainScreenEvent){

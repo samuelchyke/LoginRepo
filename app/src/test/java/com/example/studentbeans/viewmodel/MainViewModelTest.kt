@@ -12,6 +12,7 @@ import com.example.studentbeans.repository.mock.FakeNetworkRepoImpl
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.resetMain
 import org.junit.After
@@ -20,6 +21,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * Unit tests for the implementation of [MainViewModel]
+ */
 @RunWith(AndroidJUnit4::class)
 @ExperimentalCoroutinesApi
 class MainViewModelTest {
@@ -48,13 +52,12 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `get photos from network`() = runBlocking {
+    fun `Load photos from network repository - Non empty photos`() = runBlocking {
 
         //Given an initialized MainViewModel
-        val photos = mainViewModel.photos
 
-        //When
-        mainViewModel.onTriggerEvent(GetPhotosEvent)
+        //Then
+        val uiState = mainViewModel.uiState.first()
 
         val expected = listOf(
             PhotoItem(
@@ -66,39 +69,43 @@ class MainViewModelTest {
             )
         )
 
-        //Then
-        assertThat(photos.value).isEqualTo(expected)
+        assertThat(uiState.photos.isEmpty()).isFalse()
+        assertThat(uiState.photos).isEqualTo(expected)
     }
 
     @Test
-    fun `email gets changed`() = runBlocking {
+    fun onEmailChangedEvent() = runBlocking {
 
-        //Given
-        val email = mainViewModel.email
+        val uiState = mainViewModel.uiState.first()
 
-        //When
+        // Verify that the email is empty initially
+        assertThat(uiState.email).isEmpty()
+
+        //When OnEmailChangedEvent() is triggered
         mainViewModel.onTriggerEvent(OnEmailChangedEvent("John@email.com"))
 
         val expected = "John@email.com"
 
-        //Then
-        assertThat(email.value).isEqualTo(expected)
+        //Then email is the same as the expected value
+        assertThat(uiState.email).isEqualTo(expected)
 
     }
 
     @Test
-    fun `password gets changed`() = runBlocking {
+    fun onPasswordChangedEvent() = runBlocking {
 
-        //Given
-        val password = mainViewModel.password
+        val uiState = mainViewModel.uiState.first()
 
-        //When
+        // Verify that the password is empty initially
+        assertThat(uiState.password).isEmpty()
+
+        // When OnPasswordChangedEvent() is triggered
         mainViewModel.onTriggerEvent(OnPasswordChangedEvent("Password123"))
 
         val expected = "Password123"
 
-        //Then
-        assertThat(password.value).isEqualTo(expected)
+        // Then password is the same as the expected value
+        assertThat(uiState.password).isEqualTo(expected)
 
     }
 

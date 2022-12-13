@@ -18,8 +18,8 @@ fun Navigation(mainViewModel: MainViewModel = viewModel()) {
 
         composable(route = Screen.LoginScreen.route) {
             val uiState = mainViewModel.uiState.collectAsState()
-            val email = mainViewModel.email.collectAsState()
-            val password = mainViewModel.password.collectAsState()
+//            val email = mainViewModel.email.collectAsState()
+//            val password = mainViewModel.password.collectAsState()
             LoginScreen(
                 navController = navController,
                 emailText = uiState.value.email,
