@@ -3,11 +3,13 @@ package com.example.studentbeans
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.studentbeans.presentation.Navigation
+import com.example.studentbeans.presentation.NavGraph
 import com.example.studentbeans.ui.theme.StudentBeansTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-
+/**
+ * Main activity for the app
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -15,9 +17,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             StudentBeansTheme {
-                Navigation()
+                NavGraph()
             }
         }
     }
 }
-

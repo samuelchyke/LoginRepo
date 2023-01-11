@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.studentbeans.model.PhotoItem
 
-
 @Composable
 fun PhotoList(
     photos: List<PhotoItem>

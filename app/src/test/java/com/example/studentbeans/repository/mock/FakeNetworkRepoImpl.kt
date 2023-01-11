@@ -18,15 +18,11 @@ class FakeNetworkRepoImpl : NetworkRepository {
         private val photoResponseMock = PhotoResponse()
 
         private val photoItemsMock = PhotoItem(
-                albumId = 0,
-                id = 0,
-                thumbnailUrl = "",
-                title = "",
-                url = ""
-            )
-
-
+            albumId = 0,
+            id = 0,
+            thumbnailUrl = "",
+            title = "",
+            url = ""
+        )
     }
-
-
 }

@@ -48,6 +48,7 @@ ext {
     hiltAndroidXVersion = '1.0.0'
     junitVersion = '4.13.2'
     landscapeVersion = '2.0.0'
+    mockitoVersion = '3.10.0'
     multiDexVersion = '2.0.1'
     navigationVersion = '2.5.0'
     okhttpVersion = '4.9.3'

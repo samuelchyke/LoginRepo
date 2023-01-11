@@ -7,15 +7,12 @@ import retrofit2.http.GET
 interface PhotosServiceApi {
 
     @GET(PHOTO_SEARCH_PATH)
-    suspend fun getListOfPhotos() : Response<PhotoResponse>
+    suspend fun getListOfPhotos(): Response<PhotoResponse>
 
-    companion object{
+    companion object {
 
         const val BASE_URL = "https://jsonplaceholder.typicode.com/"
 
         private const val PHOTO_SEARCH_PATH = "photos"
-
     }
-
-
 }

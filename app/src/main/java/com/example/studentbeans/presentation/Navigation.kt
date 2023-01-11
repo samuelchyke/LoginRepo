@@ -1,44 +1,44 @@
 package com.example.studentbeans.presentation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.studentbeans.domain.mainscreen.MainScreenEvent.*
-import com.example.studentbeans.util.Screen
-import com.example.studentbeans.domain.MainViewModel
-import kotlinx.coroutines.flow.collect
+import androidx.navigation.NavHostController
+import com.example.studentbeans.presentation.Destinations.LOGIN_ROUTE
+import com.example.studentbeans.presentation.Destinations.MAIN_SCREEN_ROUTE
 
-@Composable
-fun Navigation(mainViewModel: MainViewModel = viewModel()) {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
+/**
+ * Screens used in [Destinations]
+ */
+sealed class Screens(val route: String) {
+    object LoginScreen : Screens("LoginScreen")
+    object MainScreen : Screens("MainScreen")
 
-        composable(route = Screen.LoginScreen.route) {
-            val uiState = mainViewModel.uiState.collectAsState()
-//            val email = mainViewModel.email.collectAsState()
-//            val password = mainViewModel.password.collectAsState()
-            LoginScreen(
-                navController = navController,
-                emailText = uiState.value.email,
-                passwordText = uiState.value.password,
-                onEmailChanged = { mainViewModel.onTriggerEvent( OnEmailChangedEvent(it)) },
-                onPasswordChanged = { mainViewModel.onTriggerEvent( OnPasswordChangedEvent(it)) },
-                onValidateFields = { mainViewModel.onTriggerEvent( OnValidateFieldsEvent(it)) }
-            )
-        }
-
-        composable(route = Screen.MainScreen.route) {
-            val uiState = mainViewModel.uiState.collectAsState()
-            MainScreen(
-                navController = navController,
-                photos = uiState.value.photos
-            )
+    fun withArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { args ->
+                append("/$args")
+            }
         }
     }
 }
 
+/**
+ * [Destinations] used in the [NavigationActions]
+ */
+object Destinations {
+    val LOGIN_ROUTE = Screens.LoginScreen.route
+    val MAIN_SCREEN_ROUTE = Screens.MainScreen.route
+}
 
+/**
+ * Models the navigation actions in the app.
+ */
+class NavigationActions(private val navController: NavHostController) {
 
+    fun navigateToLogin() {
+        navController.navigate(LOGIN_ROUTE)
+    }
+
+    fun navigateToMainScreen() {
+        navController.navigate(MAIN_SCREEN_ROUTE)
+    }
+}

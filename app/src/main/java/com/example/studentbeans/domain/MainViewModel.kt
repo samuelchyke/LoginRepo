@@ -1,31 +1,20 @@
 package com.example.studentbeans.domain
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.example.studentbeans.domain.mainscreen.GetPhotosUseCase
 import com.example.studentbeans.domain.mainscreen.MainScreenEvent
 import com.example.studentbeans.domain.mainscreen.MainScreenEvent.*
-import com.example.studentbeans.domain.mainscreen.MainScreenUIState
 import com.example.studentbeans.model.PhotoItem
-import com.example.studentbeans.util.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
- * Saved instance state keys.
+ * SavedInstanceState for the main screen
  */
 private const val KEY_EMAIL = "email"
 private const val KEY_PASSWORD = "password"
@@ -34,7 +23,7 @@ private const val KEY_PASSWORD = "password"
  * UiState for the main screen.
  */
 data class MainScreenUIState(
-    val photos : List<PhotoItem> = listOf(),
+    val photos: List<PhotoItem> = listOf(),
     val email: String = "",
     val password: String = ""
 )
@@ -46,33 +35,42 @@ data class MainScreenUIState(
 class MainViewModel @Inject constructor(
     private val getPhotosUseCase: GetPhotosUseCase,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel(){
+) : ViewModel() {
 
-    // UI State
+    private val _photos: MutableStateFlow<List<PhotoItem>> = MutableStateFlow(listOf())
+    private val _email = MutableStateFlow("")
+    private val _password = MutableStateFlow("")
+
+//    val uiState : StateFlow<MainScreenUIState> = combine(_photos,_email,_password)
+//    { _photos,_email,_password ->
+//        MainScreenUIState(
+//            photos = _photos,
+//            email = _email,
+//            password = _password
+//        )
+//    }.stateIn(
+//        viewModelScope,
+//        SharingStarted.WhileSubscribed(),
+//        MainScreenUIState(email = "")
+//    )
     private val _uiState = MutableStateFlow(MainScreenUIState())
-    val  uiState = _uiState.asStateFlow()
-
-//    val photos: MutableState<List<PhotoItem>> = mutableStateOf(listOf())
-
-//    val email = savedStateHandle.getStateFlow(KEY_EMAIL, "")
-
-//    val password = savedStateHandle.getStateFlow(KEY_PASSWORD, "")
+    val uiState = _uiState.asStateFlow()
 
     init {
         onTriggerEvent(GetPhotosEvent)
 
-        _uiState.update {
-            it.copy(
-                email = savedStateHandle.getStateFlow(KEY_EMAIL,"").value,
-                password = savedStateHandle.getStateFlow(KEY_PASSWORD,"").value
-            )
-        }
+//        _uiState.update {
+//            it.copy(
+//                email = savedStateHandle.getStateFlow(KEY_EMAIL, "").value,
+//                password = savedStateHandle.getStateFlow(KEY_PASSWORD, "").value
+//            )
+//        }
     }
 
-    fun onTriggerEvent(event: MainScreenEvent){
+    fun onTriggerEvent(event: MainScreenEvent) {
         viewModelScope.launch {
             try {
-                when(event){
+                when (event) {
                     is GetPhotosEvent -> {
                         getPhotos()
                     }
@@ -82,28 +80,32 @@ class MainViewModel @Inject constructor(
                     is OnPasswordChangedEvent -> {
                         onPasswordChanged(event.password)
                     }
-                    is OnValidateFieldsEvent -> {
-                        onValidateFields(event.navController)
+                    is OnLoginEvent -> {
+                        onLogin(event.navigateToMain)
                     }
                 }
-            }catch (e: Exception){
-                Log.e(TAG, "launchJob: Exception: ${e}, ${e.cause}")
+            } catch (e: Exception) {
+                Timber.e("launchJob: Exception: $e, ${e.cause}")
                 e.printStackTrace()
             }
         }
     }
 
-    private suspend fun getPhotos(){
-//        photos.value = getPhotosUseCase.invoke()
-        _uiState.update {
-            it.copy(
-                photos = getPhotosUseCase.invoke()
-            )
+    private suspend fun getPhotos() {
+        getPhotosUseCase.invoke().data?.let { photos ->
+            _photos.value = photos
+            _uiState.update {
+                it.copy(
+                    photos = photos
+                )
+            }
         }
     }
 
     private fun onEmailChanged(email: String) {
         savedStateHandle[KEY_EMAIL] = email
+        _email.value = email
+
         _uiState.update {
             it.copy(
                 email = email
@@ -113,6 +115,7 @@ class MainViewModel @Inject constructor(
 
     private fun onPasswordChanged(password: String) {
         savedStateHandle[KEY_PASSWORD] = password
+        _password.value = password
         _uiState.update {
             it.copy(
                 password = password
@@ -120,19 +123,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun onValidateFields(navController: NavController) {
-//        val bothFieldsNotEmpty = password.value.isBlank() || email.value.isBlank()
-        val bothFieldsNotEmpty = uiState.value.email.isBlank() || uiState.value.password.isBlank()
-        if (bothFieldsNotEmpty) {
-            Toast.makeText(
-                navController.context,
-                "Fill in both fields",
-                Toast.LENGTH_SHORT
-            ).show()
+    private fun onLogin(navigateToMain: () -> Unit) {
+        if (validateFields()) {
             return
         }
-        navController.navigate(Screen.MainScreen.route)
+        navigateToMain.invoke()
     }
 
+    private fun validateFields(): Boolean {
+        return _email.value.isBlank() || _password.value.isBlank()
+    }
 }
-

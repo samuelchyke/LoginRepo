@@ -15,7 +15,6 @@ import com.example.studentbeans.model.PhotoItem
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 
-
 @Composable
 fun PhotoCard(
     photo: PhotoItem

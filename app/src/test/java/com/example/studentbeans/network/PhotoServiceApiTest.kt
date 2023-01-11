@@ -11,7 +11,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.MockitoAnnotations
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,11 +20,11 @@ class PhotoServiceApiTest {
     lateinit var mockWebServer: MockWebServer
     private lateinit var apiService: PhotosServiceApi
     private lateinit var gson: Gson
-    private lateinit var search : String
+    private lateinit var search: String
 
     @Before
     fun setup() {
-        MockitoAnnotations.openMocks(this)
+//        MockitoAnnotations.openMocks(this)
         gson = Gson()
         mockWebServer = MockWebServer()
         apiService = Retrofit.Builder()
@@ -38,29 +37,27 @@ class PhotoServiceApiTest {
 
     @Test
     fun`get list of photos from api`() = runBlocking {
-            //Given
-            val mockResponse = MockResponse()
+        // Given
+        val mockResponse = MockResponse()
 
-            //When
-            mockWebServer.enqueue(
-                mockResponse
-                    .setResponseCode(200)
-                    .setBody(gson.toJson(PhotoResponse()))
-            )
+        // When
+        mockWebServer.enqueue(
+            mockResponse
+                .setResponseCode(200)
+                .setBody(gson.toJson(PhotoResponse()))
+        )
 
-            val response = apiService.getListOfPhotos()
+        val response = apiService.getListOfPhotos()
 
-            val expectedRequest = mockWebServer.takeRequest()
+        val expectedRequest = mockWebServer.takeRequest()
 
-            //Then
-            assertEquals(search,expectedRequest.path)
-            assertThat(response.body()).isEqualTo(PhotoResponse())
-        }
-
+        // Then
+        assertEquals(search, expectedRequest.path)
+        assertThat(response.body()).isEqualTo(PhotoResponse())
+    }
 
     @After
     fun teardown() {
         mockWebServer.shutdown()
     }
-
 }

@@ -1,9 +1,13 @@
-apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'dagger.hilt.android.plugin'
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'org.jlleitschuh.gradle.ktlint' version '11.0.0'
+}
 
 android {
     compileSdk rootProject.compileSdkVersion
@@ -46,6 +50,17 @@ android {
         }
     }
     namespace 'com.example.studentbeans'
+}
+
+ktlint {
+    android = true
+    ignoreFailures = true
+    disabledRules = ["no-wildcard-imports"]
+    reporters {
+        reporter "plain"
+        reporter "checkstyle"
+        reporter "sarif"
+    }
 }
 
 dependencies {
@@ -100,6 +115,8 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "androidx.navigation:navigation-testing:$navigationVersion"
     testImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     testImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"

@@ -16,7 +16,7 @@ import retrofit2.Response
 @RunWith(AndroidJUnit4::class)
 class NetworkRepositoryImplTest {
 
-    private lateinit var repository : NetworkRepositoryImpl
+    private lateinit var repository: NetworkRepositoryImpl
 
     @Mock
     lateinit var api: PhotosServiceApi
@@ -30,14 +30,14 @@ class NetworkRepositoryImplTest {
     @Test
     fun `get photo response`() {
         runBlocking {
-            //Mockito
+            // Mockito
             Mockito.`when`(api.getListOfPhotos()).thenReturn(Response.success(PhotoResponse()))
 
-            //When
+            // When
             val response = repository.getListOfPhotos()
             val expected = Response.success(PhotoResponse())
 
-            //Then
+            // Then
             assertThat(expected.body() == response.body())
         }
     }
